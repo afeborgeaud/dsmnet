@@ -1,0 +1,11 @@
+name: dsmnet
+dependencies:
+  - python=3.7
+  - numpy
+  - mpi4py
+  - pytorch
+  - torchvision
+  - matplotlib
+  - pandas
+  - conda-forge::obspy
+  - conda-forge::geographiclib
