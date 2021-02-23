@@ -1,7 +1,7 @@
 from dsmnet import dsmdataset
 
-def test_dataset():
-    ns = 10
+def test_dsmdataset():
+    ns = 500
     freq = 0.005
     freq2 = 0.1
     sampling_hz = 1
@@ -13,4 +13,4 @@ def test_dataset():
 
 
 if __name__ == '__main__':
-    test_dataset()
+    test_dsmdataset()

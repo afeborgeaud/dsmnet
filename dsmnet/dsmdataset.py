@@ -35,15 +35,22 @@ def _get_dataset_dpp(sampling_hz):
 def _get_windows_dpp(dataset):
     phases = ['ScS', 'Sdiff']
     components = ['T']
-    t_before = 50.
-    t_after = 30.
+    t_before = 20.  # 50
+    t_after = 12.   # 30
     windows = WindowMaker.windows_from_dataset(
         dataset, 'ak135', phases, components, t_before, t_after)
     return windows
 
-def _output_to_arr(output, windows, component):
+def _output_to_arr(output, windows, components):
+    """
+
+    Returns:
+        ndarray: array of shape (1, nsta, nt)
+
+    """
     # TODO sort the stations wrt distance
-    arr_list = []
+    nt = int(windows[0].get_length() * output.sampling_hz)
+    arr = np.zeros((len(components), len(output.stations), nt))
 
     for ista, station in enumerate(output.stations):
         windows_filt = [
@@ -54,30 +61,46 @@ def _output_to_arr(output, windows, component):
             window_arr = windows_filt[0].to_array()
             i_start = int(window_arr[0] * output.sampling_hz)
             i_end = int(window_arr[1] * output.sampling_hz)
-            u_cut = output.us[component, ista, i_start:i_end]
-            arr_list.append(u_cut)
+            u_cut = output.us[components, ista, i_start:i_end]
+            arr[:, ista, :] = u_cut
 
-    arr = np.vstack(tuple(arr_list))
     return arr
 
-def _outputs_to_X(outputs, windows, freq, freq2):
-    arr_list = []
+def _to_X_Y(outputs, windows, freq, freq2, perturbations, model_params):
+    """
+
+    Returns:
+        ndarray: array of shape (nmod * nev, 1, nsta, nt)
+        ndarray: array of shape (nmod * nev, np)
+
+    """
+
+    x_list = []
+    y_list = []
+
+    components = [Component.T]
+
     for imod in range(len(outputs)):
         for iev in range(len(outputs[0])):
             output = outputs[imod][iev]
             output.filter(freq, freq2, 'bandpass')
-            output_arr = _output_to_arr(output, windows, Component.T) # TODO
-            arr_list.append(output_arr)
+            output_arr = _output_to_arr(output,
+                                        windows, components) # TODO
+            x_list.append(output_arr)
             output.free()
 
-    X = np.array(arr_list)
-    return X
+            y_arr = _perturbations_to_arr(perturbations[imod], model_params)
+            y_list.append(y_arr)
+
+    X = np.array(x_list)
+    Y = np.array(y_list)
+    return X, Y
 
 
-def _perturbations_to_Y(perturbations, model_params):
+def _perturbations_to_arr(perturbation, model_params):
     free_indices = model_params.get_free_indices()
     types = model_params.get_types()
-    Y = np.array(perturbations)
+    Y = np.array(perturbation[free_indices])
     return Y
 
 
@@ -115,8 +138,8 @@ def single_layer_dpp(
 
     if rank == 0:
         windows = _get_windows_dpp(dataset)
-        X = _outputs_to_X(outputs, windows, freq, freq2)
-        Y = _perturbations_to_Y(perturbations, model_params)
+        X, Y = _to_X_Y(outputs, windows, freq,
+                       freq2, perturbations, model_params)
 
         print(X.shape)
         print(Y.shape)
@@ -127,7 +150,7 @@ def single_layer_dpp(
             np.save(f, Y)
 
         for i in range(X.shape[0]):
-            plt.imshow(X[i])
+            plt.imshow(X[i, 0])
             plt.savefig('X_{}.png'.format(i), bbox_inches='tight')
 
 
