@@ -32,7 +32,7 @@ class RSDataset(Dataset):
 
 
 def _normalize_X(X):
-    maxs = np.abs(X).max(axis=3, keepdims=True)
+    maxs = np.abs(X).max(axis=2, keepdims=True)
     X /= maxs
     return X
 

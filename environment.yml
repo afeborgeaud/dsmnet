@@ -9,3 +9,4 @@ dependencies:
   - pandas
   - conda-forge::obspy
   - conda-forge::geographiclib
+  - tensorboard
