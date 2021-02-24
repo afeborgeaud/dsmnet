@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 import numpy as np
 
-class RSDataset():
+class RSDataset(Dataset):
     """Seismic record section dataset.
 
     Samples are tuples (record section, model perturbation)
