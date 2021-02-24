@@ -21,8 +21,8 @@ def _get_stations(event):
     stations = [
         Station(
             '{:03d}'.format(i), 'DSM',
-            event.latitude + 70 + i, event.longitude + 0.001)
-        for i in range(32)]
+            event.latitude + 70 + 0.5 * i, event.longitude + 0.001)
+        for i in range(60)]
     return stations
 
 def _get_dataset_dpp(sampling_hz):
@@ -33,10 +33,10 @@ def _get_dataset_dpp(sampling_hz):
     return dataset
 
 def _get_windows_dpp(dataset):
-    phases = ['ScS', 'Sdiff']
+    phases = ['S', 'Sdiff']
     components = ['T']
-    t_before = 20.  # 50
-    t_after = 12.   # 30
+    t_before = 14.  # 50
+    t_after = 70.   # 30
     windows = WindowMaker.windows_from_dataset(
         dataset, 'ak135', phases, components, t_before, t_after)
     return windows
@@ -103,6 +103,12 @@ def _perturbations_to_arr(perturbation, model_params):
     Y = np.array(perturbation[free_indices])
     return Y
 
+def _plot_models(models):
+    fig, ax = plt.subplots(1)
+    for model in models:
+        model.plot(ax=ax, color='black')
+    return fig, ax
+
 
 def single_layer_dpp(
         ns, freq, freq2, sampling_hz,
@@ -127,6 +133,13 @@ def single_layer_dpp(
             mesh_type=model_params.get_mesh_type(), seed=seed)
 
         models, perturbations = umcutils.sample_models(ns)
+
+        # plot models for quick check
+        fig, ax = _plot_models(models)
+        ax.set_xlim(6.5, 8.)
+        ax.set_ylim(3480., 4000.)
+        fig.savefig('./models.pdf', bbox_inches='tight')
+        plt.close(fig)
     else:
         models = None
         perturbations = None

@@ -17,6 +17,7 @@ class RSDataset():
         with open(path_y, 'rb') as f:
             y = np.load(f)
 
+        X = X.transpose((0, 1, 3, 2))
         X = _normalize_X(X)
         y = _normalize_Y(y)
 
