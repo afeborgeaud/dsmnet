@@ -14,7 +14,7 @@ From the directory where you downloaded the log file, run
 ```bash
 tensorboard --logdir=.
 ```
-and navigate to http://localhost:6007/ to see the results.
+and navigate to http://localhost:6006/ to see the result of the NNWI.
 
 
 
