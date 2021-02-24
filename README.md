@@ -2,7 +2,7 @@
 1-D Neural network waveform inversion (NNWI) using [dsmpy](https://github.com/afeborgeaud/dsmpy)
 
 ## Example
-The result of a test NNWI for a simple single-layer model of the D" region (lowermost 400 km of the mantle) can be downloaded [here]().
+The result of a test NNWI for a simple single-layer model of the D" region (lowermost 400 km of the mantle) can be downloaded [here](https://github.com/afeborgeaud/dsmnet/tree/main/tests/example_runs/dsmset_experiment_1).
 
 To view it, please install tensorboard,
 
