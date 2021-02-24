@@ -4,7 +4,7 @@
 ## Example
 The result of a test NNWI for a simple single-layer model of the D" region (lowermost 400 km of the mantle) can be downloaded [here](https://www.dropbox.com/sh/fs84en2063t03vf/AACzWdE1xMw-cQW3NQ5LTc-da?dl=1).
 
-To view it, please install tensorboard,
+To view it, please install tensorboard using conda,
 
 ```bash
 conda install -n your_environment tensorboard
