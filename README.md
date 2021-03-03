@@ -1,5 +1,6 @@
 # dsmnet
-1-D Neural network waveform inversion (NNWI) using [dsmpy](https://github.com/afeborgeaud/dsmpy)
+1-D seismic imaging (waveform inversion) using convolutional neural networks.<br/>
+Inputs are computed using the Python package for seismic waveform computation [dsmpy](https://github.com/afeborgeaud/dsmpy).
 
 
 <p align="center"><img src="https://github.com/afeborgeaud/dsmnet/blob/main/tests/figures/lenetd3.svg" height="350px"></p>
