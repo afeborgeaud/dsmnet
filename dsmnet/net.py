@@ -35,7 +35,7 @@ class LeNet(nn.Module):
         return x
 
 class LeNetD3(nn.Module):
-    """Implements LeNet neural network.
+    """Implements a modified LeNet neural network for 84x60 inputs.
 
     The input image should be of dimensions (nc, 84, 60).
     The activation function used is tanh, to modelize input

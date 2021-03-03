@@ -1,7 +1,8 @@
 **/__pycache__
 **.png
-**.pdf
 **.npy
 **.pth
+**.pdf
+!tests/figures/*pdf
 .idea
 **.pyc
