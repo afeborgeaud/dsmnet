@@ -2,6 +2,21 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+def get_activation(name, activation):
+    """Store activation function for some layer.
+
+        Arguments:
+            name (str): name of a layer
+            activation (dict): where the activation is stored
+                (modified variable)
+        Returns:
+
+    """
+    def hook(model, input, output):
+        activation[name] = output.detach()
+    return hook
+
+
 class LeNet(nn.Module):
     """Implements LeNet neural network.
 
