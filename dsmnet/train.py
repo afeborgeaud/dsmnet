@@ -19,7 +19,7 @@ def train(net, dataloader, losses, epoch, writer):
 
         optimizer.zero_grad()
 
-        outputs = net(inputs)
+        outputs, _ = net(inputs)
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
@@ -27,24 +27,22 @@ def train(net, dataloader, losses, epoch, writer):
         running_loss += loss.item()
         count += 1
 
-        if i % 20 == 0:
-            # print('{} train_loss: {:.3e}'.format(epoch, train_losses[-1]))
-
-            writer.add_scalar('training loss',
-                              loss.item(),
-                              epoch * len(trainloader) + i)
-            writer.add_figure('prediction vs. actuals',
-                              plot_inputs_pred(net, inputs, targets),
-                              global_step=epoch * len(trainloader) + i)
-
-    losses.append(running_loss / count)
+    writer.add_scalar('training loss',
+                      loss.item(),
+                      epoch * len(trainloader) + i)
+    writer.add_figure('prediction vs. actuals',
+                      plot_inputs_pred(net, inputs, targets),
+                      global_step=epoch * len(trainloader) + i)
+            
+    if epoch % 20 == 0:
+        print('{} train_loss: {:.3e}'.format(epoch, loss.item()))
 
 
 def test(net, dataloader, criterion, losses):
     net.eval()
     data = next(iter(dataloader))
     inputs, targets = data
-    outputs = net(inputs)
+    outputs, _ = net(inputs)
     loss = criterion(outputs, targets)
     losses.append(loss.item())
 
@@ -57,7 +55,7 @@ def target_to_plot_arr(target):
     return vs, h
 
 def plot_inputs_pred(net, inputs, targets):
-    outputs = net(inputs)
+    outputs, _ = net(inputs)
     fig, axes = plt.subplots(2, 4, figsize=(12, 8))
     for i in range(axes.shape[1]):
         vs_pred, h_pred = target_to_plot_arr(outputs[i])
@@ -126,7 +124,7 @@ if __name__ == '__main__':
     optimizer = optim.SGD(net.parameters(), lr=lr, momentum=momentum)
 
     # train
-    n_epoch = 300
+    n_epoch = 500
     train_losses = []
     test_losses = []
     for epoch in range(1, n_epoch + 1):

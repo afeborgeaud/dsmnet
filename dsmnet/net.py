@@ -75,12 +75,13 @@ class LeNetD3(nn.Module):
         self = self.double()
 
     def forward(self, x):
-        x = self.pool(torch.tanh(self.conv1(x)))
-        x = self.pool(torch.tanh(self.conv2(x)))
-        x = self.pool(torch.tanh(self.conv3(x)))
+        x1 = self.pool(torch.tanh(self.conv1(x)))
+        x2 = self.pool(torch.tanh(self.conv2(x1)))
+        x3 = self.pool(torch.tanh(self.conv3(x2)))
+        x = x3
         x = x.view(-1, 32 * 7 * 4)
         x = torch.tanh(self.fc1(x))
         x = torch.tanh(self.fc2(x))
         x = self.fc3(x)
-        return x
+        return x, (x1, x2, x3)
 
